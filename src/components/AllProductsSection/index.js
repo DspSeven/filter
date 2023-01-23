@@ -128,9 +128,37 @@ class AllProductsSection extends Component {
     this.setState({activeOptionId}, this.getProducts)
   }
 
+  // render products
+  productView = () => {
+    const {productsList} = this.state
+    return (
+      <ul className="products-list">
+        {productsList.map(product => (
+          <ProductCard productData={product} key={product.id} />
+        ))}
+      </ul>
+    )
+  }
+
+  // render no products view
+  noProductsView = () => {
+    console.log('no products view')
+    return (
+      <div>
+        <img
+          src="https://assets.ccbp.in/frontend/react-js/nxt-trendz/nxt-trendz-no-products-view.png"
+          alt="products failure"
+        />
+        <h1>No Products Found</h1>
+        <p>we could not find any products. try again other filters</p>
+      </div>
+    )
+  }
+
   renderProductsList = () => {
     const {productsList, activeOptionId} = this.state
-
+    const showProducts = productsList.length > 0
+    console.log(showProducts)
     // TODO: Add No Products View
     return (
       <div className="all-products-container">
@@ -139,11 +167,7 @@ class AllProductsSection extends Component {
           sortbyOptions={sortbyOptions}
           changeSortby={this.changeSortby}
         />
-        <ul className="products-list">
-          {productsList.map(product => (
-            <ProductCard productData={product} key={product.id} />
-          ))}
-        </ul>
+        {showProducts ? this.productView() : this.noProductsView()}
       </div>
     )
   }
@@ -203,6 +227,21 @@ class AllProductsSection extends Component {
     this.setState({searchValue}, this.getProducts)
   }
 
+  // reset filters
+  resetFilters = () => {
+    this.setState(
+      {
+        productsList: [],
+        activeOptionId: sortbyOptions[0].optionId,
+        apiStatus: productsConstants.initial,
+        categoryId: '',
+        ratingId: '',
+        searchValue: '',
+      },
+      this.getProducts,
+    )
+  }
+
   render() {
     // const {isLoading} = this.state
     const {ratingId, searchValue} = this.state
@@ -217,6 +256,7 @@ class AllProductsSection extends Component {
           updateRating={this.updateRating}
           searchValue={this.searchValue}
           searchVal={searchValue}
+          resetFilters={this.resetFilters}
         />
 
         {/* isLoading ? this.renderLoader() : this.renderProductsList() */}
