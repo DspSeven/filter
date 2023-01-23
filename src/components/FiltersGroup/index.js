@@ -37,10 +37,15 @@ const FiltersGroup = props => {
       const changeRating = () => updateRating(rating.ratingId)
       return (
         <li onClick={changeRating} key={rating.ratingId}>
-          <img src={rating.imageUrl} alt="rating" />
+          <img src={rating.imageUrl} alt={`rating ${rating.ratingId}`} />
         </li>
       )
     })
+  }
+
+  const clearFilters = () => {
+    const {resetFilters} = props
+    resetFilters()
   }
 
   return (
@@ -50,7 +55,9 @@ const FiltersGroup = props => {
       {renderCategories()}
       <h1>Rating</h1>
       {renderRatings()}
-      <button type="button">Clear Filters</button>
+      <button type="button" onClick={clearFilters}>
+        Clear Filters
+      </button>
     </div>
   )
 }
