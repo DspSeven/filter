@@ -77,6 +77,9 @@ class AllProductsSection extends Component {
     productsList: [],
     activeOptionId: sortbyOptions[0].optionId,
     apiStatus: productsConstants.initial,
+    categoryId: '',
+    ratingId: '',
+    searchValue: '',
   }
 
   componentDidMount() {
@@ -91,8 +94,8 @@ class AllProductsSection extends Component {
 
     // TODO: Update the code to get products with filters applied
 
-    const {activeOptionId} = this.state
-    const apiUrl = `https://apis.ccbp.in/products?sort_by=${activeOptionId}`
+    const {activeOptionId, categoryId, searchValue, ratingId} = this.state
+    const apiUrl = `https://apis.ccbp.in/products?sort_by=${activeOptionId}&category=${categoryId}&title_search=${searchValue}&rating=${ratingId}`
     const options = {
       headers: {
         Authorization: `Bearer ${jwtToken}`,
@@ -185,15 +188,35 @@ class AllProductsSection extends Component {
     }
   }
 
+  // update category
+  updateCategory = categoryId => {
+    this.setState({categoryId}, this.getProducts)
+  }
+  // update rating
+
+  updateRating = ratingId => {
+    this.setState({ratingId}, this.getProducts)
+  }
+
+  // enter search i/p
+  searchValue = searchValue => {
+    this.setState({searchValue}, this.getProducts)
+  }
+
   render() {
     // const {isLoading} = this.state
-
+    const {ratingId, searchValue} = this.state
+    console.log(ratingId)
     return (
       <div className="all-products-section">
         {/* TODO: Update the below element */}
         <FiltersGroup
           categoryOptions={categoryOptions}
           ratingsList={ratingsList}
+          updateCategory={this.updateCategory}
+          updateRating={this.updateRating}
+          searchValue={this.searchValue}
+          searchVal={searchValue}
         />
 
         {/* isLoading ? this.renderLoader() : this.renderProductsList() */}
